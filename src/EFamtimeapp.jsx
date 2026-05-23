@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
- 
+
 const LOGO = "data:image/png;base64,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";
- 
+
 // ─── Theme ──────────────────────────────────────────────────────────
 const BG    = "linear-gradient(160deg,#e0f2fe 0%,#bae6fd 35%,#7dd3fc 65%,#38bdf8 100%)";
 const CARD  = "rgba(255,255,255,0.62)";
@@ -16,24 +16,24 @@ const GRAD  = [
   "linear-gradient(135deg,#f97316,#c2410c)",
   "linear-gradient(135deg,#06b6d4,#0e7490)",
 ];
- 
+
 // ─── PeerJS peer ID for a username ──────────────────────────────────
 // prefix "famtime-" + username (lowercase, no spaces)
 // This means both caller and callee use the SAME known ID — no room codes needed
 const toPeerId = u => "famtime-" + (u || "").toLowerCase().replace(/[^a-z0-9]/g, "");
- 
+
 // ─── Storage ─────────────────────────────────────────────────────────
 const sv = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (_) {} };
 const ld = (k, d) => { try { const v = localStorage.getItem(k); return v !== null ? JSON.parse(v) : d; } catch (_) { return d; } };
 const K  = { U:"ft3_users", P:"ft3_profile", C:"ft3_contacts", R:"ft3_recents", M:"ft3_missed" };
- 
+
 // ─── Helpers ──────────────────────────────────────────────────────────
 const inits   = n => (n||"").trim().split(" ").map(w => w[0]||"").join("").toUpperCase().slice(0,2) || "?";
 const fmtSec  = s => Math.floor(s/60) + ":" + String(s % 60).padStart(2,"0");
 const nowStr  = () => new Date().toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"});
 const nowFull = () => { const d=new Date(); return d.toLocaleDateString([],{month:"short",day:"numeric"}) + " " + d.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}); };
 const greet   = () => { const h=new Date().getHours(); return h<12?"Good morning \u2600\ufe0f":h<17?"Good afternoon \ud83c\udf24":"Good evening \ud83c\udf19"; };
- 
+
 // ─── Static styles ────────────────────────────────────────────────────
 const S = {
   page:    { fontFamily:"system-ui,sans-serif", minHeight:"100vh", background:BG },
@@ -48,7 +48,7 @@ const S = {
   btnGhost:{ display:"block", width:"100%", padding:15, borderRadius:14, border:"1.5px solid rgba(14,165,233,0.45)", background:"rgba(255,255,255,0.5)", color:"#0369a1", fontSize:16, fontWeight:600, cursor:"pointer", marginBottom:10 },
   btnGreen:{ display:"block", width:"100%", padding:15, borderRadius:14, border:"none", background:"linear-gradient(135deg,#22c55e,#16a34a)", color:"#fff", fontSize:17, fontWeight:700, cursor:"pointer", marginBottom:10 },
 };
- 
+
 const AI_STEPS = [
   { q:"Hello! I will help you set up Famtime.\n\nFirst — what is your first name?", lbl:"First name",    key:"first", t:"text"     },
   { q:"Lovely! And your last name?",                                                   lbl:"Last name",     key:"last",  t:"text"     },
@@ -57,7 +57,7 @@ const AI_STEPS = [
   { q:"Your phone number?",                                                             lbl:"Phone number",  key:"phone", t:"tel"      },
   { q:"What city and country are you in?",                                             lbl:"City, Country", key:"loc",   t:"text"     },
 ];
- 
+
 const AI_ANS = {
   call:      "Tap any contact on the home screen or in Contacts. Both people need Famtime open. The other person just needs to tap Answer when they see the incoming call!",
   group:     "Tap More > Start Group Call, select people and press Start.",
@@ -69,7 +69,7 @@ const AI_ANS = {
   password:  "Tap \'Forgot password?\' on the sign-in screen.",
   default:   "I can help with calls, contacts, favourites, and settings. What would you like to know? \uD83D\uDE0A",
 };
- 
+
 // ══════════════════════════════════════════════════════════════════════
 // STABLE COMPONENTS (module-level — never remount, fixes typing bug)
 // ══════════════════════════════════════════════════════════════════════
@@ -82,7 +82,7 @@ const Field = ({ lbl, type, val, onChange, placeholder, autoFocus }) => (
       autoComplete="off" autoCorrect="off" spellCheck={false} />
   </div>
 );
- 
+
 const TabBar = ({ active, onTab, missedCount }) => (
   <div style={S.tabBar}>
     {[["fav","home","\u2b50","Favourites"],["recents","recents","\ud83d\udd50","Recents"],["contacts","contacts","\ud83d\udc65","Contacts"],["more","more","\u22ef","More"]].map(([id,sc,icon,lbl]) => (
@@ -96,35 +96,35 @@ const TabBar = ({ active, onTab, missedCount }) => (
     ))}
   </div>
 );
- 
+
 const BackBtn = ({ onBack, title }) => (
   <div style={{...S.topBar,display:"flex",alignItems:"center",gap:12}}>
     <button onClick={onBack} style={{background:"rgba(255,255,255,0.6)",border:CARDB,borderRadius:"50%",width:36,height:36,color:"#0369a1",fontSize:18,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>&#8592;</button>
     <span style={{fontSize:19,fontWeight:700,color:"#0c4a6e"}}>{title}</span>
   </div>
 );
- 
+
 // ══════════════════════════════════════════════════════════════════════
 //  MAIN APP
 // ══════════════════════════════════════════════════════════════════════
 export default function App() {
- 
+
   // ── persisted ─────────────────────────────────────────────────────
   const [users,    setUsers]    = useState(() => ld(K.U, {}));
   const [profile,  setProfile]  = useState(() => ld(K.P, {name:"",last:"",user:"",phone:"",loc:"",logged:false}));
   const [contacts, setContacts] = useState(() => ld(K.C, []));
   const [recents,  setRecents]  = useState(() => ld(K.R, []));
   const [missed,   setMissed]   = useState(() => ld(K.M, []));
- 
+
   // ── nav ───────────────────────────────────────────────────────────
   const [screen,    setScreen]    = useState("welcome");
   const [navHist,   setNavHist]   = useState([]);
   const [activeTab, setActiveTab] = useState("fav");
- 
+
   // ── toast ─────────────────────────────────────────────────────────
   const [toast, setToast] = useState("");
   const toastT = useRef(null);
- 
+
   // ── form state (individual useState → no remount/typing bug) ──────
   const [sfFirst, setSfFirst] = useState("");
   const [sfLast,  setSfLast]  = useState("");
@@ -154,7 +154,7 @@ export default function App() {
   const [grpSecs, setGrpSecs] = useState(0);
   const [aiChat,  setAiChat]  = useState([{who:"ai",txt:"Hello! I am your Famtime assistant \uD83E\uDD16\n\nAsk me anything!"}]);
   const [aiChatInp, setAiChatInp] = useState("");
- 
+
   // ── call state ────────────────────────────────────────────────────
   const [callId,       setCallId]       = useState(null);   // contact id being called
   const [callSecs,     setCallSecs]     = useState(0);
@@ -173,14 +173,14 @@ export default function App() {
   const remoteVid  = useRef(null);
   const localVid   = useRef(null);
   const [peerReady, setPeerReady] = useState(false);
- 
+
   // ── persist ────────────────────────────────────────────────────────
   useEffect(() => sv(K.U, users),    [users]);
   useEffect(() => sv(K.P, profile),  [profile]);
   useEffect(() => sv(K.C, contacts), [contacts]);
   useEffect(() => sv(K.R, recents.slice(0,30)), [recents]);
   useEffect(() => sv(K.M, missed.slice(0,50)),  [missed]);
- 
+
   // ── load PeerJS then boot inbox peer ─────────────────────────────
   useEffect(() => {
     const load = () => {
@@ -193,7 +193,7 @@ export default function App() {
     };
     load();
   }, []);
- 
+
   // ── once PeerJS ready + user logged in → open inbox peer ──────────
   useEffect(() => {
     if (!peerReady || !profile.logged || !profile.user) return;
@@ -204,12 +204,12 @@ export default function App() {
       }
     };
   }, [peerReady, profile.logged, profile.user]); // eslint-disable-line
- 
+
   // ── auto-login ────────────────────────────────────────────────────
   useEffect(() => {
     if (profile.logged) { setScreen("home"); setNavHist([]); }
   }, []); // eslint-disable-line
- 
+
   // ─────────────────────────────────────────────────────────────────
   //  INBOX PEER — listens for calls using username as peer ID
   // ─────────────────────────────────────────────────────────────────
@@ -231,9 +231,19 @@ export default function App() {
       ]}
     });
     inboxPeer.current = p;
- 
-    p.on("open", id => console.log("Inbox peer open:", id));
- 
+
+    p.on("open", id => {
+      console.log("Inbox peer open:", id);
+      setPeerReady(true);
+    });
+
+    p.on("disconnected", () => {
+      console.log("Peer disconnected, reconnecting...");
+      try {
+        p.reconnect();
+      } catch (_) {}
+    });
+
     p.on("call", mediaCall => {
       // Extract caller info from metadata
       const callerName = mediaCall.metadata?.callerName || "Unknown";
@@ -256,7 +266,7 @@ export default function App() {
       }, 30000);
       setMissedRing(t);
     });
- 
+
     p.on("error", e => {
       // ID taken = someone else registered same username, retry with suffix
       if (e.type === "unavailable-id") {
@@ -265,7 +275,7 @@ export default function App() {
       }
     });
   }, []);
- 
+
   // ─────────────────────────────────────────────────────────────────
   //  ANSWER incoming call
   // ─────────────────────────────────────────────────────────────────
@@ -277,14 +287,14 @@ export default function App() {
     setCallStatus("Connecting...");
     setCallActive(false);
     setIsVideo(withVideo);
- 
+
     // Find or create contact entry for display
     const existingContact = contacts.find(c => (c.famUser||"").toLowerCase() === callerUser.toLowerCase());
     if (!existingContact) {
       // Add to recents with caller name
       setRecents(r => [{ name:callerName, time:nowStr(), dur:"\u2014", icon:"\uD83D\uDCDE" }, ...r.slice(0,29)]);
     }
- 
+
     navigator.mediaDevices.getUserMedia({ audio: true, video: withVideo })
       .then(stream => {
         localSt.current = stream;
@@ -303,7 +313,7 @@ export default function App() {
       })
       .catch(() => showToast("Please allow microphone access to answer calls"));
   }, [incomingCall, missedRing, contacts]); // eslint-disable-line
- 
+
   const declineCall = useCallback(() => {
     if (!incomingCall) return;
     clearTimeout(missedRing);
@@ -311,7 +321,7 @@ export default function App() {
     // Log as missed from caller's perspective — here we just dismiss
     setIncomingCall(null);
   }, [incomingCall, missedRing]);
- 
+
   // ─────────────────────────────────────────────────────────────────
   //  OUTGOING CALL — calls the other person by their Famtime username
   // ─────────────────────────────────────────────────────────────────
@@ -324,7 +334,7 @@ export default function App() {
       return;
     }
     if (!peerReady || !window.Peer) { showToast("Call system loading..."); return; }
- 
+
     setCallId(contactId);
     setCallActive(false);
     setCallSecs(0);
@@ -332,30 +342,23 @@ export default function App() {
     setCallStatus("Calling " + c.name + "...");
     setScreen("call-active");
     setRecents(r => [{ name:c.name, time:nowStr(), dur:"\u2014", icon:withVideo?"\uD83D\uDCF9":"\uD83D\uDCDE" }, ...r.slice(0,29)]);
- 
+
     navigator.mediaDevices.getUserMedia({ audio:true, video:withVideo })
       .then(stream => {
         localSt.current = stream;
         if (withVideo && localVid.current) { localVid.current.srcObject = stream; localVid.current.style.display = "block"; }
- 
-        // Destroy old outgoing peer if any
-        if (activePeer.current && !activePeer.current.destroyed) {
-          try { activePeer.current.destroy(); } catch(_) {}
+
+        // Reuse the persistent inbox peer instead of creating a new peer every call
+        const p = inboxPeer.current;
+
+        if (!p) {
+          setCallStatus("Connection system not ready");
+          showToast("Please wait a moment and try again");
+          return;
         }
- 
-        // Use a unique caller ID so it never collides
-        const myCallId = toPeerId(profile.user) + "-out-" + Date.now();
-        const p = new window.Peer(myCallId, {
-          host: "0.peerjs.com", port: 443, path: "/", secure: true,
-          config: { iceServers: [
-            { urls: "stun:stun.l.google.com:19302" },
-            { urls: "stun:stun1.l.google.com:19302" },
-            { urls: "turn:openrelay.metered.ca:80",    username:"openrelayproject", credential:"openrelayproject" },
-            { urls: "turn:openrelay.metered.ca:443",   username:"openrelayproject", credential:"openrelayproject" },
-          ]}
-        });
+
         activePeer.current = p;
- 
+
         p.on("open", () => {
           const theirPeerId = toPeerId(theirUsername);
           setCallStatus("Ringing " + c.name + "...");
@@ -367,7 +370,7 @@ export default function App() {
             }
           });
           activeCall.current = call;
- 
+
           call.on("stream", remoteStream => {
             setCallStatus("Connected \u2713");
             setCallActive(true);
@@ -383,7 +386,7 @@ export default function App() {
             setRecents(r => { const u=[...r]; if(u[0]&&u[0].dur==="\u2014") u[0].dur="No answer"; return u; });
           });
         });
- 
+
         p.on("error", e => {
           setCallStatus("Error: " + e.type);
           showToast("Call failed: " + e.type);
@@ -391,7 +394,7 @@ export default function App() {
       })
       .catch(() => showToast("Please allow microphone/camera access"));
   }, [contacts, peerReady, profile]); // eslint-disable-line
- 
+
   // ─────────────────────────────────────────────────────────────────
   //  CALL TIMER / CLEANUP
   // ─────────────────────────────────────────────────────────────────
@@ -400,7 +403,7 @@ export default function App() {
     let s = 0; setCallSecs(0);
     callTimer.current = setInterval(() => { s++; setCallSecs(s); }, 1000);
   }, []);
- 
+
   const cleanupCall = useCallback(() => {
     clearInterval(callTimer.current);
     try { if (activeCall.current)                               activeCall.current.close();    } catch(_) {}
@@ -411,7 +414,7 @@ export default function App() {
     if (localVid.current)  { localVid.current.srcObject = null;  localVid.current.style.display  = "none"; }
     setCallActive(false); setCallSecs(0); setIsMuted(false);
   }, []);
- 
+
   const endCall = useCallback(() => {
     setRecents(r => {
       const u = [...r];
@@ -424,7 +427,7 @@ export default function App() {
     cleanupCall();
     goBack();
   }, [cleanupCall, callSecs]); // eslint-disable-line
- 
+
   // ─────────────────────────────────────────────────────────────────
   //  NAVIGATION
   // ─────────────────────────────────────────────────────────────────
@@ -433,7 +436,7 @@ export default function App() {
     setScreen(s);
     if (s === "contacts") setSearch("");
   }, [screen]);
- 
+
   const goBack = useCallback(() => {
     setNavHist(h => {
       if (!h.length) return h;
@@ -441,7 +444,7 @@ export default function App() {
       return h.slice(0, -1);
     });
   }, []);
- 
+
   const goTab = useCallback((s) => {
     const m = {home:"fav", recents:"recents", contacts:"contacts", more:"more"};
     setActiveTab(m[s] || "fav");
@@ -449,7 +452,7 @@ export default function App() {
     setNavHist([]);
     if (s === "recents") setMissed([]); // clear missed badge when viewing recents
   }, []);
- 
+
   // ─────────────────────────────────────────────────────────────────
   //  TOAST
   // ─────────────────────────────────────────────────────────────────
@@ -458,7 +461,7 @@ export default function App() {
     clearTimeout(toastT.current);
     toastT.current = setTimeout(() => setToast(""), 3200);
   }, []);
- 
+
   // ─────────────────────────────────────────────────────────────────
   //  ACCOUNTS
   // ─────────────────────────────────────────────────────────────────
@@ -471,7 +474,7 @@ export default function App() {
     setUsers(u); sv(K.U, u);
     return true;
   };
- 
+
   const doLogin = useCallback(() => {
     const key = siUser.trim().toLowerCase();
     if (!key) { setSiErr("Please enter your username."); return; }
@@ -484,20 +487,20 @@ export default function App() {
     setProfile(p); sv(K.P, p);
     setScreen("home"); setNavHist([]);
   }, [siUser, siPass]);
- 
+
   const applyProfile = (p) => {
     const full = { ...p, logged:true };
     setProfile(full); sv(K.P, full);
     setScreen("home"); setNavHist([]);
   };
- 
+
   const doSignup = () => {
     if (!sfFirst.trim()) { showToast("First name is required"); return; }
     const ok = registerUser({ first:sfFirst, last:sfLast, user:sfUser, pass:sfPass, phone:sfPhone, loc:sfLoc, name:sfFirst });
     if (!ok) return;
     applyProfile({ name:sfFirst.trim(), last:sfLast.trim(), user:sfUser.trim(), phone:sfPhone.trim(), loc:sfLoc.trim() });
   };
- 
+
   const aiNext = () => {
     if (!aiInp.trim()) return;
     const d = { ...aiData, [AI_STEPS[aiStep].key]: aiInp.trim() };
@@ -507,7 +510,7 @@ export default function App() {
       applyProfile({ name:d.first||"User", last:d.last||"", user:d.user||"", phone:d.phone||"", loc:d.loc||"" });
     } else { setAiStep(s => s + 1); }
   };
- 
+
   const logout = () => {
     cleanupCall();
     if (inboxPeer.current && !inboxPeer.current.destroyed) try { inboxPeer.current.destroy(); } catch(_) {}
@@ -516,7 +519,7 @@ export default function App() {
     setProfile(p); sv(K.P, p);
     setScreen("welcome"); setNavHist([]);
   };
- 
+
   // ─────────────────────────────────────────────────────────────────
   //  CONTACTS
   // ─────────────────────────────────────────────────────────────────
@@ -529,13 +532,13 @@ export default function App() {
     showToast(c.name + " added! \uD83D\uDC4B");
     goBack();
   };
- 
+
   const saveEdit = () => {
     if (!ecName.trim()) { showToast("Name required"); return; }
     setContacts(p => p.map(c => c.id === editId ? { ...c, name:ecName.trim(), famUser:ecUser.trim().toLowerCase(), phone:ecPhone.trim()||c.phone, fav:ecFav } : c));
     showToast("Contact updated \u2713"); goBack();
   };
- 
+
   const delContact = (id) => {
     const c = contacts.find(x => x.id === id);
     setContacts(p => p.filter(x => x.id !== id));
@@ -543,7 +546,7 @@ export default function App() {
     if (screen === "edit") goBack();
     showToast((c ? c.name : "Contact") + " deleted");
   };
- 
+
   const toggleFav = (id) => {
     setContacts(p => p.map(c => {
       if (c.id !== id) return c;
@@ -551,7 +554,7 @@ export default function App() {
       return { ...c, fav: !c.fav };
     }));
   };
- 
+
   // ─────────────────────────────────────────────────────────────────
   //  AI CHAT
   // ─────────────────────────────────────────────────────────────────
@@ -561,7 +564,7 @@ export default function App() {
     const key = Object.keys(AI_ANS).find(k => q.toLowerCase().includes(k)) || "default";
     setAiChat(c => [...c, {who:"user",txt:q}, {who:"ai",txt:AI_ANS[key]}]);
   };
- 
+
   // ─────────────────────────────────────────────────────────────────
   //  GROUP CALL
   // ─────────────────────────────────────────────────────────────────
@@ -571,16 +574,16 @@ export default function App() {
     grpTimer.current = setInterval(() => { s++; setGrpSecs(s); }, 1000);
     goTo("group-call");
   };
- 
+
   const callee = contacts.find(x => x.id === callId) || null;
   const missedCount = missed.length;
- 
+
   // ══════════════════════════════════════════════════════════════════
   //  RENDER
   // ══════════════════════════════════════════════════════════════════
   const renderScreen = () => {
     switch (screen) {
- 
+
     case "welcome": return (
       <div style={{...S.page,display:"flex",flexDirection:"column",justifyContent:"center"}}>
         <div style={S.card}>
@@ -595,7 +598,7 @@ export default function App() {
         </div>
       </div>
     );
- 
+
     case "onboard": return (
       <div style={{...S.page,display:"flex",flexDirection:"column",justifyContent:"center"}}>
         <div style={S.card}>
@@ -609,7 +612,7 @@ export default function App() {
         </div>
       </div>
     );
- 
+
     case "ai-signup": {
       const step = AI_STEPS[Math.min(aiStep, AI_STEPS.length-1)];
       return (
@@ -626,7 +629,7 @@ export default function App() {
         </div>
       );
     }
- 
+
     case "signup": return (
       <div style={S.page}>
         <BackBtn onBack={goBack} title="Create Account" />
@@ -645,7 +648,7 @@ export default function App() {
         </div>
       </div>
     );
- 
+
     case "signin": return (
       <div style={S.page}>
         <BackBtn onBack={goBack} title="Sign In" />
@@ -662,7 +665,7 @@ export default function App() {
         </div>
       </div>
     );
- 
+
     case "home": {
       const favs = contacts.filter(c => c.fav);
       return (
@@ -703,7 +706,7 @@ export default function App() {
         </div>
       );
     }
- 
+
     case "recents": return (
       <div style={{...S.page,display:"flex",flexDirection:"column"}}>
         <div style={S.topBar}><div style={{fontSize:20,fontWeight:700,color:"#0c4a6e"}}>Recent Calls</div></div>
@@ -730,7 +733,7 @@ export default function App() {
         <TabBar active={activeTab} onTab={goTab} missedCount={missedCount} />
       </div>
     );
- 
+
     case "contacts": return (
       <div style={{...S.page,display:"flex",flexDirection:"column"}}>
         <div style={S.topBar}>
@@ -772,7 +775,7 @@ export default function App() {
         <TabBar active={activeTab} onTab={goTab} missedCount={missedCount} />
       </div>
     );
- 
+
     case "more": return (
       <div style={{...S.page,display:"flex",flexDirection:"column"}}>
         <div style={S.topBar}><div style={{fontSize:20,fontWeight:700,color:"#0c4a6e"}}>More</div></div>
@@ -810,7 +813,7 @@ export default function App() {
         <TabBar active={activeTab} onTab={goTab} missedCount={missedCount} />
       </div>
     );
- 
+
     // ── CONTACT CALL SCREEN (pre-call) ─────────────────────────────
     default: {
       // Handle "contact-call-ID" screens
@@ -841,7 +844,7 @@ export default function App() {
       }
       return <div style={{padding:20,color:"#0c4a6e",fontSize:16}}>Loading...</div>;
     }
- 
+
     // ── ACTIVE CALL SCREEN ─────────────────────────────────────────
     case "call-active": return (
       <div style={{minHeight:"100vh",background:"linear-gradient(160deg,#0369a1,#0284c7,#0c4a6e)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:16,padding:20,position:"relative"}}>
@@ -871,7 +874,7 @@ export default function App() {
         </div>
       </div>
     );
- 
+
     case "group-setup": return (
       <div style={S.page}>
         <BackBtn onBack={goBack} title="Group Call Setup" />
@@ -893,7 +896,7 @@ export default function App() {
         </div>
       </div>
     );
- 
+
     case "group-call": return (
       <div style={{background:"linear-gradient(160deg,#0369a1,#0284c7,#0c4a6e)",minHeight:"100vh",display:"flex",flexDirection:"column"}}>
         <div style={{padding:"16px 18px",display:"flex",justifyContent:"space-between",borderBottom:"1px solid rgba(255,255,255,0.2)"}}>
@@ -916,7 +919,7 @@ export default function App() {
         </div>
       </div>
     );
- 
+
     case "settings": return (
       <div style={S.page}>
         <BackBtn onBack={goBack} title="Settings" />
@@ -935,7 +938,7 @@ export default function App() {
         </div>
       </div>
     );
- 
+
     case "add-contact": return (
       <div style={S.page}>
         <BackBtn onBack={goBack} title="Add Contact" />
@@ -955,7 +958,7 @@ export default function App() {
         </div>
       </div>
     );
- 
+
     case "edit": return (
       <div style={S.page}>
         <BackBtn onBack={goBack} title="Edit Contact" />
@@ -972,7 +975,7 @@ export default function App() {
         </div>
       </div>
     );
- 
+
     case "ai-help": return (
       <div style={{...S.page,display:"flex",flexDirection:"column"}}>
         <div style={{...S.topBar,display:"flex",alignItems:"center",gap:12}}>
@@ -1002,10 +1005,10 @@ export default function App() {
         </div>
       </div>
     );
- 
+
     }
   };
- 
+
   // ── INCOMING CALL OVERLAY ─────────────────────────────────────────
   const IncomingCallUI = () => {
     if (!incomingCall) return null;
@@ -1038,7 +1041,7 @@ export default function App() {
       </div>
     );
   };
- 
+
   return (
     <div style={{fontFamily:"system-ui,sans-serif",background:BG,minHeight:"100vh",maxWidth:430,margin:"0 auto"}}>
       {renderScreen()}
@@ -1064,4 +1067,3 @@ export default function App() {
     </div>
   );
 }
- 
