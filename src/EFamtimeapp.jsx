@@ -36,10 +36,10 @@ const greet   = () => { const h=new Date().getHours(); return h<12?"Good morning
 
 // ─── Static styles ────────────────────────────────────────────────────
 const S = {
-  page:    { fontFamily:"system-ui,sans-serif", minHeight:"100vh", background:BG },
-  card:    { background:CARD, backdropFilter:"blur(18px)", WebkitBackdropFilter:"blur(18px)", border:CARDB, borderRadius:22, padding:22, margin:"12px 14px" },
+  page:    { fontFamily:"system-ui,sans-serif", minHeight:"100vh", width:"100%", maxWidth:"100vw", overflowX:"hidden", background:BG },
+  card:    { background:CARD, backdropFilter:"blur(18px)", WebkitBackdropFilter:"blur(18px)", border:CARDB, borderRadius:22, padding:"clamp(14px,4vw,22px)", margin:"12px 14px", width:"calc(100% - 28px)", boxSizing:"border-box" },
   topBar:  { background:"rgba(255,255,255,0.58)", backdropFilter:"blur(16px)", WebkitBackdropFilter:"blur(16px)", padding:"13px 16px 11px", borderBottom:"1px solid rgba(255,255,255,0.7)", position:"sticky", top:0, zIndex:50 },
-  tabBar:  { position:"sticky", bottom:0, display:"flex", background:"rgba(255,255,255,0.68)", backdropFilter:"blur(18px)", WebkitBackdropFilter:"blur(18px)", borderTop:"1px solid rgba(255,255,255,0.7)", padding:"7px 0 12px", zIndex:50 },
+  tabBar:  { position:"fixed", left:0, right:0, bottom:0, width:"100%", display:"flex", background:"rgba(255,255,255,0.68)", backdropFilter:"blur(18px)", WebkitBackdropFilter:"blur(18px)", borderTop:"1px solid rgba(255,255,255,0.7)", padding:"7px 0 12px", zIndex:50 },
   inp:     { width:"100%", padding:"13px 15px", borderRadius:13, border:"1.5px solid rgba(14,165,233,0.4)", background:"rgba(255,255,255,0.7)", color:"#0c4a6e", fontSize:17, outline:"none", boxSizing:"border-box", fontFamily:"system-ui,sans-serif" },
   lbl:     { display:"block", fontSize:12, color:"#0284c7", fontWeight:600, letterSpacing:.7, textTransform:"uppercase", marginBottom:5 },
   btnBlue: { display:"block", width:"100%", padding:15, borderRadius:14, border:"none", background:"linear-gradient(135deg,#0ea5e9,#0284c7)", color:"#fff", fontSize:17, fontWeight:700, cursor:"pointer", marginBottom:10 },
@@ -108,6 +108,22 @@ const BackBtn = ({ onBack, title }) => (
 //  MAIN APP
 // ══════════════════════════════════════════════════════════════════════
 export default function App() {
+
+  // Responsive viewport handling
+  useEffect(() => {
+    const updateViewport = () => {
+      document.documentElement.style.setProperty(
+        '--vh',
+        `${window.innerHeight * 0.01}px`
+      );
+    };
+
+    updateViewport();
+    window.addEventListener('resize', updateViewport);
+
+    return () => window.removeEventListener('resize', updateViewport);
+  }, []);
+
 
   // ── persisted ─────────────────────────────────────────────────────
   const [users,    setUsers]    = useState(() => ld(K.U, {}));
@@ -234,6 +250,7 @@ export default function App() {
 
     p.on("open", id => {
       console.log("Inbox peer open:", id);
+      console.log("Peer ready for calls");
       setPeerReady(true);
     });
 
@@ -362,13 +379,24 @@ export default function App() {
         p.on("open", () => {
           const theirPeerId = toPeerId(theirUsername);
           setCallStatus("Ringing " + c.name + "...");
-          const call = p.call(theirPeerId, stream, {
-            metadata: {
-              callerName: profile.name || profile.user,
-              callerUser: profile.user,
-              video: withVideo,
-            }
-          });
+          console.log("Calling peer:", theirPeerId);
+
+          let call;
+
+          try {
+            call = p.call(theirPeerId, stream, {
+              metadata: {
+                callerName: profile.name || profile.user,
+                callerUser: profile.user,
+                video: withVideo,
+              }
+            });
+          } catch (err) {
+            console.error("Call failed:", err);
+            setCallStatus("Connection failed");
+            showToast("Unable to reach user");
+            return;
+          }
           activeCall.current = call;
 
           call.on("stream", remoteStream => {
@@ -848,7 +876,7 @@ export default function App() {
     // ── ACTIVE CALL SCREEN ─────────────────────────────────────────
     case "call-active": return (
       <div style={{minHeight:"100vh",background:"linear-gradient(160deg,#0369a1,#0284c7,#0c4a6e)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:16,padding:20,position:"relative"}}>
-        <video ref={remoteVid} autoPlay playsInline style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",opacity:0,transition:"opacity .5s"}} />
+        <video ref={remoteVid} autoPlay playsInline style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",width:"100%",height:"100%",objectFit:"cover",opacity:0,transition:"opacity .5s"}} />
         <video ref={localVid}  autoPlay muted playsInline style={{position:"absolute",bottom:110,right:14,width:90,height:124,objectFit:"cover",borderRadius:12,border:"2px solid rgba(255,255,255,0.4)",display:"none",zIndex:2}} />
         <div style={{position:"relative",zIndex:3,display:"flex",flexDirection:"column",alignItems:"center",gap:14,width:"100%"}}>
           <div style={{width:104,height:104,borderRadius:"50%",background:callee?callee.color:GRAD[0],display:"flex",alignItems:"center",justifyContent:"center",fontSize:36,fontWeight:700,color:"#fff",border:"3px solid rgba(255,255,255,0.4)",boxShadow:"0 0 0 10px rgba(255,255,255,0.1)"}}>
